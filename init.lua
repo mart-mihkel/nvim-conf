@@ -51,6 +51,9 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Disable Nerd Font
+vim.g.have_nerd_font = false
+
 -- [[ Basic Keymaps ]]
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
@@ -138,11 +141,6 @@ require("lazy").setup({
 				end,
 			},
 			{ "nvim-telescope/telescope-ui-select.nvim" },
-
-			-- Useful for getting pretty icons, but requires special font.
-			--  If you already have a Nerd Font, or terminal set up with fallback fonts
-			--  you can enable this
-			-- { 'nvim-tree/nvim-web-devicons' }
 		},
 		config = function()
 			-- [[ Configure Telescope ]]
@@ -254,12 +252,10 @@ require("lazy").setup({
 			capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
 			-- Enable language servers
-			--  Add any additional override configuration in the following tables. Available keys are:
-			--  - cmd (table): Override the default command used to start the server
-			--  - filetypes (table): Override the default list of associated filetypes for the server
-			--  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
-			--  - settings (table): Override the default settings passed when initializing the server.
-			--        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+			-- cmd (table): Override the default command used to start the server
+			-- filetypes (table): Override the default list of associated filetypes for the server
+			-- capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
+			-- settings (table): Override the default settings passed when initializing the server.
 			local servers = {
 				lua_ls = {
 					settings = {
@@ -462,7 +458,7 @@ require("lazy").setup({
 			--  You could remove this setup call if you don't like it,
 			--  and try some other statusline plugin
 			local statusline = require("mini.statusline")
-			statusline.setup()
+			statusline.setup({ use_icons = vim.g.have_nerd_font })
 
 			-- You can configure sections in the statusline by overriding their
 			-- default behavior. For example, here we set the section for
@@ -519,6 +515,26 @@ require("lazy").setup({
 	--  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
 	--    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
 	-- { import = 'custom.plugins' },
+}, {
+	ui = {
+		-- If you have a Nerd Font, set icons to an empty table which will use the
+		-- default lazy.nvim defined Nerd Font icons otherwise define a unicode icons table
+		icons = vim.g.have_nerd_font and {} or {
+			cmd = "⌘",
+			config = "🛠",
+			event = "📅",
+			ft = "📂",
+			init = "⚙",
+			keys = "🗝",
+			plugin = "🔌",
+			runtime = "💻",
+			require = "🌙",
+			source = "📄",
+			start = "🚀",
+			task = "📌",
+			lazy = "💤 ",
+		},
+	},
 })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
