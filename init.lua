@@ -96,9 +96,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 	{ "tpope/vim-sleuth" }, -- Detect tabstop and shiftwidth automatically
-
 	{ "numToStr/Comment.nvim", opts = {} }, -- "gc" to comment visual regions/lines
-
 	{ -- Git related signs to the gutter, utilities for managing changes
 		"lewis6991/gitsigns.nvim",
 		opts = {
@@ -299,12 +297,9 @@ require("lazy").setup({
 			},
 			formatters_by_ft = {
 				lua = { "stylua" },
-				-- Conform can also run multiple formatters sequentially
-				-- python = { "isort", "black" },
-				--
-				-- You can use a sub-list to tell conform to run *until* a formatter
-				-- is found.
-				-- javascript = { { "prettierd", "prettier" } },
+				python = { "ruff_format" },
+				rust = { "rustfmt" },
+				["_"] = { "trim_whitespace" },
 			},
 		},
 	},
