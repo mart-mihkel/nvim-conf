@@ -1,9 +1,4 @@
--- [[ Options ]]
-
 require("options")
-
--- [[ Basic Keymaps ]]
-
 require("keymaps")
 
 -- [[ Basic Autocommands ]]
