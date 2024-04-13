@@ -3,7 +3,6 @@ require("keymaps")
 require("autocommands")
 
 -- [[ Install `lazy.nvim` plugin manager ]]
-
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
 	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -12,7 +11,6 @@ end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
 -- [[ Configure and install plugins ]]
-
 require("lazy").setup(require("plugins"), {
 	ui = {
 		-- If you have a Nerd Font, set icons to an empty table which will use the
