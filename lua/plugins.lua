@@ -53,6 +53,13 @@ return {
 			require("telescope").setup({
 				defaults = {
 					path_display = { "truncate" },
+					layout_strategy = "horizontal",
+					layout_config = {
+						horizontal = {
+							width = { padding = 5 },
+							heigth = { padding = 5 },
+						},
+					},
 				},
 				extensions = {
 					["ui-select"] = {
