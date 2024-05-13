@@ -194,7 +194,7 @@ return {
 				handlers = {
 					function(server_name)
 						local server = servers[server_name] or {}
-						-- Override only explicitly passed valued
+						-- Override only explicitly passed values
 						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
 						require("lspconfig")[server_name].setup(server)
 					end,
