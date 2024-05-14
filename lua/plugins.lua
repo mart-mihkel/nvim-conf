@@ -52,7 +52,10 @@ return {
 			-- [[ Configure Telescope ]]
 			require("telescope").setup({
 				defaults = {
-					path_display = { "truncate" },
+					path_display = function(_, path)
+						local tail = require("telescope.utils").path_tail(path)
+						return string.format("%s (%s)", tail, path)
+					end,
 					layout_strategy = "horizontal",
 					layout_config = {
 						horizontal = {
