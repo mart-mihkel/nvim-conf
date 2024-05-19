@@ -59,8 +59,8 @@ return {
 					layout_strategy = "horizontal",
 					layout_config = {
 						horizontal = {
-							width = { padding = 5 },
-							heigth = { padding = 5 },
+							width = { padding = 4 },
+							heigth = { padding = 4 },
 						},
 					},
 				},
