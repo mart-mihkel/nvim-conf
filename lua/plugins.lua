@@ -260,8 +260,9 @@ return {
 					["<C-n>"] = cmp.mapping.select_next_item(),
 					-- Select the [p]revious item
 					["<C-p>"] = cmp.mapping.select_prev_item(),
-					-- Accept ([y]es) the completion.
+					-- Accept the completion.
 					["<C-y>"] = cmp.mapping.confirm({ select = true }),
+					["<Tab>"] = cmp.mapping.confirm({ select = true }),
 					-- Manually trigger a completion from nvim-cmp.
 					["<C-Space>"] = cmp.mapping.complete({}),
 
