@@ -7,10 +7,11 @@ local sleuth = { "tpope/vim-sleuth" }
 local comment = { "numToStr/Comment.nvim", opts = {} }
 
 -- Highlight todo, notes, etc in comments
+local plenary = { "nvim-lua/plenary.nvim" }
 local todo_comments = {
 	"folke/todo-comments.nvim",
 	event = "VimEnter",
-	dependencies = { "nvim-lua/plenary.nvim" },
+	dependencies = { plenary },
 	opts = { signs = false },
 }
 
@@ -45,7 +46,6 @@ local whichkey = {
 }
 
 -- Fuzzy Finder (files, lsp, etc)
-local plenary = { "nvim-lua/plenary.nvim" }
 local telescope_fzf_native = { -- If encountering errors, see telescope-fzf-native README for install instructions
 	"nvim-telescope/telescope-fzf-native.nvim",
 	build = "make",
@@ -285,7 +285,7 @@ local nvim_cmp = {
 				["<C-n>"] = cmp.mapping.select_next_item(),
 				-- Select the [p]revious item
 				["<C-p>"] = cmp.mapping.select_prev_item(),
-				-- Accept the completion.
+				-- Accept ([y]es) the completion.
 				["<C-y>"] = cmp.mapping.confirm({ select = true }),
 				["<Tab>"] = cmp.mapping.confirm({ select = true }),
 				-- Manually trigger a completion from nvim-cmp.
@@ -320,7 +320,7 @@ local lualine = {
 	"nvim-lualine/lualine.nvim",
 	dependencies = { nvim_web_devicons },
 	config = function()
-		require("lualine").setup({})
+		require("lualine").setup()
 	end,
 }
 
