@@ -313,6 +313,17 @@ local nvim_cmp = {
 	end,
 }
 
+-- Status line
+local nvim_web_devicons = "nvim-tree/nvim-web-devicons"
+
+local lualine = {
+	"nvim-lualine/lualine.nvim",
+	dependencies = { nvim_web_devicons },
+	config = function()
+		require("lualine").setup({})
+	end,
+}
+
 -- Colorscheme
 local tokyonight = {
 	"folke/tokyonight.nvim",
@@ -331,14 +342,6 @@ local mini = {
 		require("mini.ai").setup({ n_lines = 500 })
 		-- Add/delete/replace surroundings
 		require("mini.surround").setup()
-		-- Statusline.
-		local statusline = require("mini.statusline")
-		statusline.setup({ use_icons = true })
-
-		---@diagnostic disable-next-line: duplicate-set-field
-		statusline.section_location = function()
-			return "%2l:%-2v"
-		end
 	end,
 }
 
@@ -353,6 +356,7 @@ return {
 	treesitter,
 	conform,
 	nvim_cmp,
+	lualine,
 	tokyonight,
 	mini,
 }
