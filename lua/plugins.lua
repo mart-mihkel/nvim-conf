@@ -4,7 +4,7 @@
 local sleuth = { "tpope/vim-sleuth" }
 
 -- "gc" to comment visual regions/lines
-local comments = { "numToStr/Comment.nvim", opts = {} }
+local comment = { "numToStr/Comment.nvim", opts = {} }
 
 -- Highlight todo, notes, etc in comments
 local todo_comments = {
@@ -45,21 +45,21 @@ local whichkey = {
 }
 
 -- Fuzzy Finder (files, lsp, etc)
+local plenary = { "nvim-lua/plenary.nvim" }
+local telescope_fzf_native = { -- If encountering errors, see telescope-fzf-native README for install instructions
+	"nvim-telescope/telescope-fzf-native.nvim",
+	build = "make",
+	cond = function()
+		return vim.fn.executable("make") == 1
+	end,
+}
+local telescope_ui_select = { "nvim-telescope/telescope-ui-select.nvim" }
+
 local telescope = {
 	"nvim-telescope/telescope.nvim",
 	event = "VimEnter",
 	branch = "0.1.x",
-	dependencies = {
-		{ "nvim-lua/plenary.nvim" },
-		{ -- If encountering errors, see telescope-fzf-native README for install instructions
-			"nvim-telescope/telescope-fzf-native.nvim",
-			build = "make",
-			cond = function()
-				return vim.fn.executable("make") == 1
-			end,
-		},
-		{ "nvim-telescope/telescope-ui-select.nvim" },
-	},
+	dependencies = { plenary, telescope_fzf_native, telescope_ui_select },
 	config = function()
 		-- [[ Configure Telescope ]]
 		require("telescope").setup({
@@ -121,14 +121,14 @@ local telescope = {
 }
 
 -- LSP Configuration & Plugins
-local lspconf = {
+local mason = { "williamboman/mason.nvim" }
+local mason_lspconfig = { "williamboman/mason-lspconfig.nvim" }
+local mason_tool_installer = { "WhoIsSethDaniel/mason-tool-installer.nvim" }
+local fidget = { "j-hui/fidget.nvim", opts = {} }
+
+local lspconfig = {
 	"neovim/nvim-lspconfig",
-	dependencies = {
-		{ "williamboman/mason.nvim" },
-		{ "williamboman/mason-lspconfig.nvim" },
-		{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
-		{ "j-hui/fidget.nvim", opts = {} },
-	},
+	dependencies = { mason, mason_lspconfig, mason_tool_installer, fidget },
 	config = function()
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
@@ -199,8 +199,8 @@ local lspconf = {
 
 		local ensure_installed = vim.tbl_keys(servers)
 		vim.list_extend(ensure_installed, { "stylua" })
-		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
+		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 		require("mason-lspconfig").setup({
 			handlers = {
 				function(server_name)
@@ -232,7 +232,7 @@ local treesitter = {
 }
 
 -- Autoformat
-local autoformat = {
+local conform = {
 	"stevearc/conform.nvim",
 	opts = {
 		notify_on_error = false,
@@ -250,24 +250,24 @@ local autoformat = {
 }
 
 -- Autocompletion
+-- Snippet Engine & its associated nvim-cmp source
+local lua_snip = {
+	"L3MON4D3/LuaSnip",
+	build = (function()
+		if vim.fn.has("win32") == 1 or vim.fn.executable("make") == 0 then
+			return
+		end
+		return "make install_jsregexp"
+	end)(),
+}
+local cmp_luasnip = "saadparwaiz1/cmp_luasnip"
+local cmp_nvim_lsp = "hrsh7th/cmp-nvim-lsp"
+local cmp_path = "hrsh7th/cmp-path"
+
 local nvim_cmp = {
 	"hrsh7th/nvim-cmp",
 	event = "InsertEnter",
-	dependencies = {
-		-- Snippet Engine & its associated nvim-cmp source
-		{
-			"L3MON4D3/LuaSnip",
-			build = (function()
-				if vim.fn.has("win32") == 1 or vim.fn.executable("make") == 0 then
-					return
-				end
-				return "make install_jsregexp"
-			end)(),
-		},
-		"saadparwaiz1/cmp_luasnip",
-		"hrsh7th/cmp-nvim-lsp",
-		"hrsh7th/cmp-path",
-	},
+	dependencies = { lua_snip, cmp_luasnip, cmp_nvim_lsp, cmp_path },
 	config = function()
 		local cmp = require("cmp")
 		local luasnip = require("luasnip")
@@ -333,7 +333,7 @@ local mini = {
 		require("mini.surround").setup()
 		-- Statusline.
 		local statusline = require("mini.statusline")
-		statusline.setup({ use_icons = vim.g.have_nerd_font })
+		statusline.setup({ use_icons = true })
 
 		---@diagnostic disable-next-line: duplicate-set-field
 		statusline.section_location = function()
@@ -344,14 +344,14 @@ local mini = {
 
 return {
 	sleuth,
-	comments,
+	comment,
 	todo_comments,
 	gitsigns,
 	whichkey,
 	telescope,
-	lspconf,
+	lspconfig,
 	treesitter,
-	autoformat,
+	conform,
 	nvim_cmp,
 	tokyonight,
 	mini,
