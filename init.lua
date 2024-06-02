@@ -10,7 +10,6 @@ if not vim.loop.fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
--- [[ Configure and install plugins ]]
 require("lazy").setup(require("plugins"))
 
 -- The line beneath this is called `modeline`. See `:help modeline`
