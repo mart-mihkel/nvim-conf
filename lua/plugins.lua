@@ -244,6 +244,8 @@ local conform = {
 			lua = { "stylua" },
 			python = { "ruff_format" },
 			rust = { "rustfmt" },
+			javascript = { "prettierd" },
+			typescript = { "prettierd" },
 			["_"] = { "trim_whitespace" },
 		},
 	},
