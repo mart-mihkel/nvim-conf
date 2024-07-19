@@ -51,3 +51,6 @@ vim.opt.scrolloff = 10
 
 -- Disable Nerd Font
 vim.g.have_nerd_font = false
+
+-- Hide netrw banner
+vim.g.netrw_banner = 0
