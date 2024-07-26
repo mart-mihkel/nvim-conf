@@ -1,12 +1,17 @@
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+vim.g.netrw_banner = false
+
+vim.o.background = "light"
+
 vim.opt.number = true
 vim.opt.relativenumber = true
+vim.opt.cursorline = true
 
 vim.opt.mouse = "a"
 vim.opt.inccommand = "split"
 vim.opt.splitright = true
 vim.opt.splitbelow = true
-
-vim.opt.showmode = false
 
 vim.opt.clipboard = "unnamedplus"
 vim.opt.undofile = true
@@ -21,8 +26,6 @@ vim.opt.timeoutlen = 300
 
 vim.opt.list = true
 vim.opt.listchars = { tab = "  ", trail = "·", nbsp = "␣" }
-
-vim.opt.cursorline = true
 
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
