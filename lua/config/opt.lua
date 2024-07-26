@@ -1,6 +1,8 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+vim.o.background = "light"
+
 vim.opt.number = true
 vim.opt.relativenumber = true
 
