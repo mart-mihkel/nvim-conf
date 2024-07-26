@@ -8,7 +8,6 @@ return {
 			defaults = {
 				sorting_strategy = "ascending",
 				layout_strategy = "flex",
-				border = false,
 				color_devicons = false,
 				prompt_title = "",
 				results_title = "",
@@ -25,6 +24,11 @@ return {
 				},
 			},
 		})
+
+		local colors = { bg = "#E0E2EA", fg = "#E0E2EA" }
+		vim.api.nvim_set_hl(0, "TelescopePromptBorder", colors)
+		vim.api.nvim_set_hl(0, "TelescopeResultsBorder", colors)
+		vim.api.nvim_set_hl(0, "TelescopePreviewBorder", colors)
 
 		pcall(require("telescope").load_extension, "fzf")
 
