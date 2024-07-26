@@ -5,6 +5,7 @@ return {
 		require("nvim-treesitter.configs").setup({
 			ensure_installed = {
 				"c",
+				"go",
 				"lua",
 				"vim",
 				"rust",
@@ -17,11 +18,11 @@ return {
 				"typescript",
 			},
 
+			ignore_install = {},
 			modules = {},
 
 			sync_install = false,
 			auto_install = true,
-			ignore_install = {},
 
 			indent = { enable = true },
 			highlight = { enable = true },

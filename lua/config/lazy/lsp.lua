@@ -3,90 +3,98 @@ return {
 	dependencies = {
 		"williamboman/mason.nvim",
 		"williamboman/mason-lspconfig.nvim",
-		"WhoIsSethDaniel/mason-tool-installer.nvim",
 		"j-hui/fidget.nvim",
-		opts = {},
+		"hrsh7th/nvim-cmp",
+		"hrsh7th/cmp-path",
+		"hrsh7th/cmp-buffer",
+		"hrsh7th/cmp-nvim-lsp",
+		"saadparwaiz1/cmp_luasnip",
+		{ "L3MON4D3/LuaSnip", build = "make install_jsregexp" },
 	},
 	config = function()
+		local luasnip = require("luasnip")
+		local cmp = require("cmp")
+		local cmp_lsp = require("cmp_nvim_lsp")
+		local capabilities = vim.tbl_deep_extend(
+			"force",
+			{},
+			vim.lsp.protocol.make_client_capabilities(),
+			cmp_lsp.default_capabilities()
+		)
+
+		require("fidget").setup({})
+		require("mason").setup()
+		require("mason-lspconfig").setup({
+			ensure_installed = { "lua_ls", "rust_analyzer", "tsserver" },
+			handlers = {
+				function(server)
+					require("lspconfig")[server].setup({ capabilities = capabilities })
+				end,
+				["lua_ls"] = function()
+					require("lspconfig").lua_ls.setup({
+						capabilities = capabilities,
+						settings = {
+							Lua = {
+								runtime = { version = "Lua 5.1" },
+								diagnostics = {
+									globals = { "vim" },
+								},
+							},
+						},
+					})
+				end,
+			},
+		})
+
+		luasnip.config.setup({})
+		cmp.setup({
+			snippet = {
+				expand = function(args)
+					luasnip.lsp_expand(args.body)
+				end,
+			},
+			completion = { completeopt = "menu,menuone,noinsert" },
+			mapping = cmp.mapping.preset.insert({
+				["<Tab>"] = cmp.mapping.confirm({ select = true }),
+				["<C-n>"] = cmp.mapping.select_next_item(),
+				["<C-p>"] = cmp.mapping.select_prev_item(),
+				["<C-Space>"] = cmp.mapping.complete({}),
+			}),
+			sources = {
+				{ name = "nvim_lsp" },
+				{ name = "luasnip" },
+				{ name = "buffer" },
+				{ name = "path" },
+			},
+		})
+
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
 			callback = function(event)
+				local builtin = require("telescope.builtin")
 				local map = function(keys, func, desc)
 					vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
 				end
 
-				-- Keymaps
-				map("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
-				map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
-				map("gI", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
-				map("<leader>D", require("telescope.builtin").lsp_type_definitions, "Type [D]efinition")
-				map("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
-				map("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
+				map("K", vim.lsp.buf.hover, "Hover Documentation")
+				map("gd", builtin.lsp_definitions, "[G]oto [D]efinition")
+				map("gr", builtin.lsp_references, "[G]oto [R]eferences")
+				map("gI", builtin.lsp_implementations, "[G]oto [I]mplementation")
+				map("<leader>D", builtin.lsp_type_definitions, "Type [D]efinition")
+				map("<leader>ds", builtin.lsp_document_symbols, "[D]ocument [S]ymbols")
+				map("<leader>ws", builtin.lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
 				map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
 				map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
-				map("K", vim.lsp.buf.hover, "Hover Documentation")
-				map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-
-				-- Highlight word on hover
-				local client = vim.lsp.get_client_by_id(event.data.client_id)
-				if client and client.server_capabilities.documentHighlightProvider then
-					vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-						buffer = event.buf,
-						callback = vim.lsp.buf.document_highlight,
-					})
-
-					vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-						buffer = event.buf,
-						callback = vim.lsp.buf.clear_references,
-					})
-				end
 			end,
 		})
 
-		--  Broadcast new capabilities to the LSPs
-		local capabilities = vim.lsp.protocol.make_client_capabilities()
-		capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
-
-		-- Enable language servers
-		-- cmd (table): Override the default command used to start the server
-		-- filetypes (table): Override the default list of associated filetypes for the server
-		-- capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
-		-- settings (table): Override the default settings passed when initializing the server.
-		local servers = {
-			lua_ls = {
-				settings = {
-					Lua = {
-						runtime = { version = "LuaJIT" },
-						workspace = {
-							checkThirdParty = false,
-							library = {
-								"${3rd}/luv/library",
-								unpack(vim.api.nvim_get_runtime_file("", true)),
-							},
-						},
-						completion = {
-							callSnippet = "Replace",
-						},
-					},
-				},
-			},
-		}
-
-		-- Ensure the servers and tools above are installed
-		require("mason").setup()
-
-		local ensure_installed = vim.tbl_keys(servers)
-		vim.list_extend(ensure_installed, { "stylua" })
-
-		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
-		require("mason-lspconfig").setup({
-			handlers = {
-				function(server_name)
-					local server = servers[server_name] or {}
-					-- Override only explicitly passed values
-					server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-					require("lspconfig")[server_name].setup(server)
-				end,
+		vim.diagnostic.config({
+			float = {
+				focusable = false,
+				style = "minimal",
+				source = "always",
+				header = "",
+				prefix = "",
 			},
 		})
 	end,
