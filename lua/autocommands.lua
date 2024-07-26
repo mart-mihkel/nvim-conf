@@ -5,12 +5,3 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 		vim.highlight.on_yank()
 	end,
 })
-
--- configure wgsl filetype
-vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-	desc = "Associate WebGPU Shading Language filetype",
-	pattern = "*.wgsl",
-	callback = function()
-		vim.bo.filetype = "wgsl"
-	end,
-})

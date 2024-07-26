@@ -64,16 +64,21 @@ local telescope = {
 		-- [[ Configure Telescope ]]
 		require("telescope").setup({
 			defaults = {
-				path_display = function(_, path)
-					local tail = require("telescope.utils").path_tail(path)
-					return string.format("%s (%s)", tail, path)
-				end,
-				layout_strategy = "horizontal",
+				sorting_strategy = "ascending",
+				layout_strategy = "center",
+				border = false,
+				color_devicons = false,
+				prompt_title = "",
+				results_title = "",
+				preview_title = "",
+				prompt_prefix = "",
+				selection_caret = "",
+				entry_prefix = "",
+				multi_icon = "",
+				preview = { msg_bg_fillchar = " " },
 				layout_config = {
-					horizontal = {
-						width = { padding = 4 },
-						heigth = { padding = 4 },
-					},
+					anchor = "N",
+					width = 99,
 				},
 			},
 			extensions = {
