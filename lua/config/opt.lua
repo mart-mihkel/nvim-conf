@@ -1,8 +1,6 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-vim.o.background = "light"
-
 vim.opt.number = true
 vim.opt.relativenumber = true
 
@@ -33,5 +31,3 @@ vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
 
 vim.opt.hlsearch = true
-
-vim.g.netrw_banner = false
