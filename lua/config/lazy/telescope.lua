@@ -25,11 +25,6 @@ return {
 			},
 		})
 
-		local colors = { bg = "#E0E2EA", fg = "#E0E2EA" }
-		vim.api.nvim_set_hl(0, "TelescopePromptBorder", colors)
-		vim.api.nvim_set_hl(0, "TelescopeResultsBorder", colors)
-		vim.api.nvim_set_hl(0, "TelescopePreviewBorder", colors)
-
 		pcall(require("telescope").load_extension, "fzf")
 
 		local builtin = require("telescope.builtin")
