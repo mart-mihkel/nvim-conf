@@ -2,8 +2,6 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.g.netrw_banner = false
 
-vim.o.background = "light"
-
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.cursorline = true
