@@ -13,7 +13,9 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper win
 
 vim.api.nvim_create_autocmd("VimEnter", {
 	callback = function()
-		vim.cmd("Explore")
+		if vim.tbl_count(vim.v.argv) == 2 then
+			vim.cmd("Explore")
+		end
 	end,
 })
 
