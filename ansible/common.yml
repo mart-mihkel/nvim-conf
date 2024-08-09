@@ -1,0 +1,24 @@
+- hosts: localhost
+  become: true
+  tasks:
+   
+  - name: include vars
+    include_vars:
+      file: vars.yml
+
+  - name: install apt packages 
+    apt:
+      pkg:
+      - ripgrep
+      - neovim
+      - make
+      - gcc
+
+  - name: install rust
+    become_user: "{{ user }}"
+    shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+  - name: install node version manager
+    become_user: "{{ user }}"
+    shell: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+

@@ -1,0 +1,14 @@
+- hosts: localhost
+  tasks:
+
+  - name: install software
+    apt:
+      pkg:
+      - xmonad
+
+
+  - name: install haskell
+    become: true
+    ansible.builtin.shell:
+        cmd: curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
+

@@ -1,0 +1,57 @@
+- hosts: localhost
+  become: true
+  tasks:
+
+  - name: include vars
+    include_vars:
+      file: vars.yml
+
+  - name: install software
+    apt:
+      pkg:
+      - ca-certificates
+      - python3-pip
+      - curl
+      - git
+
+  - name: git config user.name
+    become_user: "{{ user }}"
+    community.general.git_config:
+      name: user.name
+      scope: global
+      value: "{{ username }}"
+
+  - name: ugit config user.email
+    become_user: "{{ user }}"
+    community.general.git_config:
+      name: user.email
+      scope: global
+      value: "{{ email }}"
+
+  - name: add docker gpg key
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+
+  - name: add docker repository
+    apt_repository:
+      repo: deb https://download.docker.com/linux/ubuntu focal stable
+
+  - name: install docker
+    apt:
+      pkg:
+      - docker-ce-cli
+      - docker-buildx-plugin 
+      - docker-compose-plugin
+      - containerd.io
+
+  - name: ensure group docker exists with correct gid
+    ansible.builtin.group:
+      name: docker
+      state: present
+
+  - name: add user to docker group
+    ansible.builtin.user:
+      name: "{{ user }}"
+      groups: docker
+      append: true
+
