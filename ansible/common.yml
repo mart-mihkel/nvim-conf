@@ -1,16 +1,15 @@
 - hosts: localhost
   become: true
   tasks:
-   
+
   - name: include vars
     include_vars:
       file: vars.yml
 
-  - name: install apt packages 
+  - name: install apt packages
     apt:
       pkg:
       - ripgrep
-      - neovim
       - make
       - gcc
 

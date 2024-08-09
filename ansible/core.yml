@@ -14,17 +14,28 @@
       - curl
       - git
 
-  - name: git config user.name
+  - name: git config
     become_user: "{{ user }}"
     community.general.git_config:
-      name: user.name
+      name: "{{ item.name }}"
+      value: "{{ item.value }}"
       scope: global
-      value: "{{ username }}"
+    loop:
+      - { name: user.name, value: "{{ username }}"}
+      - { name: user.email, value: "{{ email }}"}
+      - { name: core.editor, value: "vi" }
 
-  - name: ugit config user.email
+  - name: git config user.email
     become_user: "{{ user }}"
     community.general.git_config:
       name: user.email
+      scope: global
+      value: "{{ email }}"
+
+  - name: git config core.editor
+    become_user: "{{ user }}"
+    community.general.git_config:
+      name: core.email
       scope: global
       value: "{{ email }}"
 
@@ -40,7 +51,7 @@
     apt:
       pkg:
       - docker-ce-cli
-      - docker-buildx-plugin 
+      - docker-buildx-plugin
       - docker-compose-plugin
       - containerd.io
 

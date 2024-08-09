@@ -1,0 +1,28 @@
+- hosts: localhost
+  become: true
+  tasks:
+
+  - name: include vars
+    include_vars:
+      file: vars.yml
+
+  - name: install neovim
+    apt:
+      name: neovim
+
+  - stat: "path={{ home }}/dotfiles"
+    register: dotfiles
+
+  - name: clone dotfiles
+    when: not dotfiles.stat.exists
+    git:
+      accept_newhostkey: true
+      repo: git@github.com:mart-mihkel/dotfiles.git
+      dest: "{{ home }}/dotfiles"
+
+  - name: symlink config
+    file:
+      path: "{{ home }}/.config/nvim"
+      src: "{{ home }}/dotfiles/nvim"
+      state: link
+      force: yes
